@@ -1,0 +1,6 @@
+@import url('https://fonts.googleapis.com/css2?family=DM+Mono:wght@400;500&family=Space+Grotesk:wght@400;500;600;700&display=swap');
+
+* { box-sizing: border-box; }
+html { background: #f6f7f1; }
+body { font-family: 'DM Mono', monospace; margin: 0; }
+button, input, select, textarea { font: inherit; }
