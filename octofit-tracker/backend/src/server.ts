@@ -1,6 +1,12 @@
 import express from 'express';
 
-import './config/database';
+import { connectDatabase } from './config/database';
+import { apiBaseUrl } from './config/environment';
+import activitiesRouter from './routes/activities';
+import leaderboardRouter from './routes/leaderboard';
+import teamsRouter from './routes/teams';
+import usersRouter from './routes/users';
+import workoutsRouter from './routes/workouts';
 
 const app = express();
 const port = Number(process.env.PORT) || 8000;
@@ -8,9 +14,22 @@ const port = Number(process.env.PORT) || 8000;
 app.use(express.json());
 
 app.get('/api/health', (_request, response) => {
-  response.json({ status: 'ok', service: 'octofit-backend' });
+  response.json({ status: 'ok', service: 'octofit-backend', apiBaseUrl });
 });
 
-app.listen(port, () => {
-  console.log(`OctoFit API listening on port ${port}`);
-});
+app.use('/api/users', usersRouter);
+app.use('/api/teams', teamsRouter);
+app.use('/api/activities', activitiesRouter);
+app.use('/api/leaderboard', leaderboardRouter);
+app.use('/api/workouts', workoutsRouter);
+
+connectDatabase()
+  .then(() => {
+    app.listen(port, () => {
+      console.log(`OctoFit API listening on port ${port}`);
+    });
+  })
+  .catch((error) => {
+    console.error('Unable to start OctoFit API:', error);
+    process.exit(1);
+  });
